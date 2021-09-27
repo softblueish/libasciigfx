@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 class Asciigfx{
 
@@ -44,7 +45,7 @@ public:
 
         // Checks if a certain point is inside the frame
 
-        bool frameSanityCheck(int x, int y){return x >= FRAMEX || y >= FRAMEY;}
+        bool frameSanityCheck(int x, int y){return x >= FRAMEX || x < 0 || y >= FRAMEY || y < 0;}
 
         // Adds color support
         void setColorSupport(bool v){
@@ -75,13 +76,50 @@ public:
 
         }
 
+	// Creates a line from (x1,y1) to (x2, y2) filled with characters c
+
+	void drawLine(int layer, int x1, int y1, int x2, int y2, char c){
+					
+           	/// sanity check
+
+           	if(frameSanityCheck(x1, y1) || frameSanityCheck(x2, y2)){
+                	std::cout << "FAILED TO DRAW LINE AT LAYER " << layer << ". (FRAME LIMIT)\n";
+                	return;
+           	}
+
+		// get unit vector of direction
+
+		float dx = x2 - x1;
+		float dy = y2 - y1;
+		float l  = sqrt(dx*dx + dy*dy);
+		
+		dx /= l;
+		dy /= l;
+
+		// draw the line onto the layer
+		
+		float cx = x1;
+		float cy = y1;
+
+		while ( dx >= 0 ? floor(cx) < x2 : ceil(cx) > x2
+		&&      dy >= 0 ? floor(cy) < y2 : ceil(cy) > y2){
+			
+			frame[layer][floor(cx)][floor(cy)] = c;
+			cx += dx;
+			cy += dy;
+
+		}
+
+
+	}
+
         // Creates square
 
         void drawSquare(int layer, int x1, int y1, int x2, int y2, char character){
 
             /// sanity check
 
-            if(frameSanityCheck(x2, y2)){
+            if(frameSanityCheck(x1, y1) && frameSanityCheck(x2, y2)){
                 std::cout << "FAILED TO DRAW SQUARE AT LAYER " << layer << ". (FRAME LIMIT)\n";
                 return;
             }
@@ -108,8 +146,8 @@ public:
             }
 
             // Prints result
-            for(int a = 0; a < FRAMEX; a++){
-                for(int b = 0; b < FRAMEY; b++){
+            for(int b = 0; b < FRAMEY; b++){
+                for(int a = 0; a < FRAMEX; a++){
                     std::cout << frame[0][a][b];
                 }
                 std::cout << "\n";
