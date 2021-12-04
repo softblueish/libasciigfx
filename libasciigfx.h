@@ -41,7 +41,6 @@ public:
                 colorLayer[i].resize(sizeY);
 
         }
-        ~Asciigfx(){}
 
         // Checks if a certain point is inside the frame
 
