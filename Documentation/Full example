@@ -1,0 +1,10 @@
+#include "include/libasciigfx.h"
+
+int main(){ 
+Asciigfx graphics(false, 80, 20, 2); // Initializes layers
+graphics.initLayer(0); // Create layer 0
+graphics.initLayer(1); // Create layer 1
+graphics.drawSquare(0, 0, 0, 79, 19, '#'); // Draw square with characther #
+graphics.drawLine(1, 10, 10, 15, 15, '.'); // Draw line with characther .
+graphics.renderFrame(); // Render all elements
+}
